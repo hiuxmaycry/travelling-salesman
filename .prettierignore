@@ -1,0 +1,6 @@
+**/*.json
+**/*.css
+**/*.md
+**/*.snap.js
+/tests/resources/reports
+/helm
