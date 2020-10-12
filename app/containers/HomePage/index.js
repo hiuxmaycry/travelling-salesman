@@ -11,7 +11,6 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import {
@@ -21,6 +20,7 @@ import {
 } from 'containers/App/selectors';
 import H2 from 'components/H2';
 import ReposList from 'components/ReposList';
+import Map from '../../components/Map';
 import AtPrefix from './AtPrefix';
 import CenteredSection from './CenteredSection';
 import Form from './Form';
@@ -76,6 +76,13 @@ export function HomePage({
           <H2>
             <FormattedMessage {...messages.trymeHeader} />
           </H2>
+          <Map
+            draggable
+            width="870px"
+            onClick={(...props) => {
+              console.log(props);
+            }}
+          />
           <Form onSubmit={onSubmitForm}>
             <label htmlFor="username">
               <FormattedMessage {...messages.trymeMessage} />

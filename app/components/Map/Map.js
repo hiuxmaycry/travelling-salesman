@@ -14,22 +14,26 @@ export class MapContainer extends React.Component {
     google: PropTypes.number,
     onClick: PropTypes.func,
     draggable: PropTypes.bool,
+    width: PropTypes.string,
+    zoom: PropTypes.number,
+    height: PropTypes.string,
   };
 
-  static defaultProps = { onClick: () => {} };
+  static defaultProps = {
+    onClick: () => {},
+    width: '850px',
+    height: '90%',
+    zoom: 14,
+    draggable: false,
+  };
 
   constructor(props) {
     super(props);
-    const { lat, lng, onClick } = this.props;
-    const width = '850px';
-    const height = '90%';
+    const { lat, lng } = this.props;
 
     this.initializeMap({
-      width,
-      height,
       lat,
       lng,
-      onClick,
     });
   }
 
@@ -52,6 +56,9 @@ export class MapContainer extends React.Component {
   });
 
   render() {
+    const { width, height, draggable, google, onClick, zoom } = this.props;
+    const { lat, lng } = this.state;
+
     return (
       <div>
         <h5 key="posicionGeografica">
@@ -61,24 +68,24 @@ export class MapContainer extends React.Component {
             bsStyle="success"
             bsSize="xsmall"
             className="pull-right"
-            onClick={this.state.onClick}
+            onClick={onClick}
           >
             Update Positión
           </button>
         </h5>
         <div style={{ height: '40vh', width: '100%' }}>
           <Map
-            draggable={this.props.draggable}
-            style={{ width: this.state.width, height: this.state.height }}
-            google={this.props.google}
-            zoom={14}
+            draggable={draggable}
+            style={{ width, height }}
+            google={google}
+            zoom={zoom}
             initialCenter={{
-              lat: this.state.lat || -34.59378080536352,
-              lng: this.state.lng || -58.44440356103553,
+              lat: lat || -34.59378080536352,
+              lng: lng || -58.44440356103553,
             }}
             center={{
-              lat: this.state.lat || -34.59378080536352,
-              lng: this.state.lng || -58.44440356103553,
+              lat: lat || -34.59378080536352,
+              lng: lng || -58.44440356103553,
             }}
             disableDefaultUI
             onClick={this.mapClicked}
@@ -86,32 +93,16 @@ export class MapContainer extends React.Component {
             <Marker
               onClick={this.onMarkerClick}
               position={{
-                lat: this.state.lat,
-                lng: this.state.lng,
+                lat,
+                lng,
               }}
               disableDefaultUI
               id="CurrentLocation"
               name="CurrentLocation"
             />
           </Map>
-          <span
-            ref={latitudSpan => {
-              this.latitudSpan = latitudSpan;
-            }}
-            id="latitudSpan"
-            name="latitudSpan"
-          >
-            {this.state.lat}
-          </span>
-          <span
-            ref={longitudSpan => {
-              this.longitudSpan = longitudSpan;
-            }}
-            id="longitudSpan"
-            name="longitudSpan"
-          >
-            {this.state.lng}
-          </span>
+          <span>{lat}</span>
+          <span>{lng}</span>
         </div>
       </div>
     );
