@@ -1,44 +1,31 @@
-import React from 'react';
+import { Map as MapContainer, Marker } from 'google-maps-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import {
-  Map,
-  Marker,
-  GoogleApiWrapper as GoogleAPIWrapper,
-} from 'google-maps-react';
+import React from 'react';
+import styles from './Map.css';
 
-export class MapContainer extends React.Component {
+export default class Map extends React.Component {
   static propTypes = {
-    lat: PropTypes.number,
-    lng: PropTypes.number,
+    initialPosition: PropTypes.object,
     google: PropTypes.number,
-    onClick: PropTypes.func,
     draggable: PropTypes.bool,
     width: PropTypes.string,
     zoom: PropTypes.number,
     height: PropTypes.string,
   };
 
+  state = {
+    markers: [],
+  };
+
   static defaultProps = {
-    onClick: () => {},
+    initialPosition: {
+      lat: -34.60373510272623,
+      lng: -58.38157007365845,
+    },
     width: '850px',
     height: '90%',
     zoom: 14,
     draggable: false,
-  };
-
-  constructor(props) {
-    super(props);
-    const { lat, lng } = this.props;
-
-    this.initializeMap({
-      lat,
-      lng,
-    });
-  }
-
-  initializeMap = state => {
-    this.setState(state);
   };
 
   onMarkerClick(event, other) {
@@ -47,7 +34,18 @@ export class MapContainer extends React.Component {
   }
 
   mapClicked = (mapProps, map, clickEvent) => {
-    console.log(`${clickEvent.latLng.lat()}     ${clickEvent.latLng.lng()}`);
+    console.log(mapProps, map, clickEvent);
+
+    const lat = clickEvent.latLng.lat();
+    const lng = clickEvent.latLng.lng();
+
+    this.addMarker(lat, lng);
+  };
+
+  addMarker = (lat, lng) => {
+    this.setState(prevState => ({
+      markers: prevState.markers.concat({ position: { lat, lng } }),
+    }));
   };
 
   getLatLng = () => ({
@@ -56,70 +54,41 @@ export class MapContainer extends React.Component {
   });
 
   render() {
-    const { width, height, draggable, google, onClick, zoom } = this.props;
-    const { lat, lng } = this.state;
+    const {
+      initialPosition,
+      width,
+      height,
+      draggable,
+      google,
+      zoom,
+    } = this.props;
+    const { markers } = this.state;
 
     return (
       <div>
-        <h5 key="posicionGeografica">
-          <b>Posición Geográfica</b>
-          <button
-            type="button"
-            bsStyle="success"
-            bsSize="xsmall"
-            className="pull-right"
-            onClick={onClick}
-          >
-            Update Positión
-          </button>
-        </h5>
-        <div style={{ height: '40vh', width: '100%' }}>
-          <Map
+        <div className={styles.map}>
+          <MapContainer
             draggable={draggable}
             style={{ width, height }}
             google={google}
             zoom={zoom}
-            initialCenter={{
-              lat: lat || -34.59378080536352,
-              lng: lng || -58.44440356103553,
-            }}
-            center={{
-              lat: lat || -34.59378080536352,
-              lng: lng || -58.44440356103553,
-            }}
+            initialCenter={initialPosition}
+            center={initialPosition}
             disableDefaultUI
             onClick={this.mapClicked}
           >
-            <Marker
-              onClick={this.onMarkerClick}
-              position={{
-                lat,
-                lng,
-              }}
-              disableDefaultUI
-              id="CurrentLocation"
-              name="CurrentLocation"
-            />
-          </Map>
-          <span>{lat}</span>
-          <span>{lng}</span>
+            {markers.map(marker => (
+              <Marker
+                onClick={this.onMarkerClick}
+                position={marker.position}
+                disableDefaultUI
+                id="CurrentLocation"
+                name="CurrentLocation"
+              />
+            ))}
+          </MapContainer>
         </div>
       </div>
     );
   }
 }
-
-const WrappedContainer = GoogleAPIWrapper({
-  apiKey: 'AIzaSyC_rDpCs7Wgs5-qpnfx70_-LgvO89-zIDA',
-})(MapContainer);
-
-export default GoogleAPIWrapper({
-  apiKey: 'AIzaSyC_rDpCs7Wgs5-qpnfx70_-LgvO89-zIDA',
-})(
-  connect(
-    null,
-    null,
-    null,
-    { withRef: true },
-  )(WrappedContainer),
-);
