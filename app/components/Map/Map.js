@@ -1,49 +1,51 @@
-import React from 'react';
+import { Map as MapContainer, Marker } from 'google-maps-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import {
-  Map,
-  Marker,
-  GoogleApiWrapper as GoogleAPIWrapper,
-} from 'google-maps-react';
+import React from 'react';
+import styles from './Map.css';
 
-export class MapContainer extends React.Component {
+export default class Map extends React.Component {
   static propTypes = {
-    lat: PropTypes.number,
-    lng: PropTypes.number,
-    google: PropTypes.number,
-    onClick: PropTypes.func,
+    initialPosition: PropTypes.object,
+    google: PropTypes.object.isRequired,
     draggable: PropTypes.bool,
+    width: PropTypes.string,
+    height: PropTypes.string,
+    zoom: PropTypes.number,
   };
 
-  static defaultProps = { onClick: () => {} };
-
-  constructor(props) {
-    super(props);
-    const { lat, lng, onClick } = this.props;
-    const width = '850px';
-    const height = '90%';
-
-    this.initializeMap({
-      width,
-      height,
-      lat,
-      lng,
-      onClick,
-    });
-  }
-
-  initializeMap = state => {
-    this.setState(state);
+  state = {
+    markers: [],
   };
 
-  onMarkerClick(event, other) {
+  static defaultProps = {
+    initialPosition: {
+      lat: -34.60373510272623,
+      lng: -58.38157007365845,
+    },
+    width: '800px',
+    height: '600px',
+    zoom: 14,
+    draggable: true,
+  };
+
+  onMarkerClick = (event, other) => {
     console.log(event);
     console.log(other);
-  }
+  };
 
   mapClicked = (mapProps, map, clickEvent) => {
-    console.log(`${clickEvent.latLng.lat()}     ${clickEvent.latLng.lng()}`);
+    console.log(mapProps, map, clickEvent);
+
+    const lat = clickEvent.latLng.lat();
+    const lng = clickEvent.latLng.lng();
+
+    this.addMarker(lat, lng);
+  };
+
+  addMarker = (lat, lng) => {
+    this.setState(prevState => ({
+      markers: prevState.markers.concat({ position: { lat, lng } }),
+    }));
   };
 
   getLatLng = () => ({
@@ -52,83 +54,43 @@ export class MapContainer extends React.Component {
   });
 
   render() {
+    const {
+      initialPosition,
+      draggable,
+      google,
+      zoom,
+      width,
+      height,
+    } = this.props;
+    const { markers } = this.state;
+
+    console.log('>>>', styles);
+
     return (
       <div>
-        <h5 key="posicionGeografica">
-          <b>Posición Geográfica</b>
-          <button
-            type="button"
-            bsStyle="success"
-            bsSize="xsmall"
-            className="pull-right"
-            onClick={this.state.onClick}
-          >
-            Update Positión
-          </button>
-        </h5>
-        <div style={{ height: '40vh', width: '100%' }}>
-          <Map
-            draggable={this.props.draggable}
-            style={{ width: this.state.width, height: this.state.height }}
-            google={this.props.google}
-            zoom={14}
-            initialCenter={{
-              lat: this.state.lat || -34.59378080536352,
-              lng: this.state.lng || -58.44440356103553,
-            }}
-            center={{
-              lat: this.state.lat || -34.59378080536352,
-              lng: this.state.lng || -58.44440356103553,
-            }}
+        <div className={styles.map}>
+          <MapContainer
+            draggable={draggable}
+            style={{ width, height }}
+            google={google}
+            zoom={zoom}
+            initialCenter={initialPosition}
+            center={initialPosition}
             disableDefaultUI
             onClick={this.mapClicked}
           >
-            <Marker
-              onClick={this.onMarkerClick}
-              position={{
-                lat: this.state.lat,
-                lng: this.state.lng,
-              }}
-              disableDefaultUI
-              id="CurrentLocation"
-              name="CurrentLocation"
-            />
-          </Map>
-          <span
-            ref={latitudSpan => {
-              this.latitudSpan = latitudSpan;
-            }}
-            id="latitudSpan"
-            name="latitudSpan"
-          >
-            {this.state.lat}
-          </span>
-          <span
-            ref={longitudSpan => {
-              this.longitudSpan = longitudSpan;
-            }}
-            id="longitudSpan"
-            name="longitudSpan"
-          >
-            {this.state.lng}
-          </span>
+            {markers.map(marker => (
+              <Marker
+                onClick={this.onMarkerClick}
+                position={marker.position}
+                disableDefaultUI
+                id="CurrentLocation"
+                name="CurrentLocation"
+              />
+            ))}
+          </MapContainer>
         </div>
       </div>
     );
   }
 }
-
-const WrappedContainer = GoogleAPIWrapper({
-  apiKey: 'AIzaSyC_rDpCs7Wgs5-qpnfx70_-LgvO89-zIDA',
-})(MapContainer);
-
-export default GoogleAPIWrapper({
-  apiKey: 'AIzaSyC_rDpCs7Wgs5-qpnfx70_-LgvO89-zIDA',
-})(
-  connect(
-    null,
-    null,
-    null,
-    { withRef: true },
-  )(WrappedContainer),
-);

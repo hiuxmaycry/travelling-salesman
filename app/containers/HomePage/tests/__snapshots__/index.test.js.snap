@@ -15,7 +15,7 @@ exports[`<HomePage /> should render and match the snapshot 1`] = `
       </h2>
       <p>
         <span>
-          A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices
+          Welcome
         </span>
       </p>
     </section>
