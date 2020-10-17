@@ -1,13 +1,10 @@
 language: node_js
 
 node_js:
-  - 'node'
-  - 'lts/*'
+  - 12
 
 script:
-  - node ./internals/scripts/generate-templates-for-linting
   - npm test -- --maxWorkers=4
-  - npm run build
 
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -16,7 +13,7 @@ before_install:
 
 notifications:
   email:
-    on_failure: change
+    on_failure: hiuxmaycry@gmail.com
 
 after_success: 'npm run coveralls'
 
