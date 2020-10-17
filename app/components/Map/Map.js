@@ -22,20 +22,19 @@ export default class Map extends React.Component {
       lat: -34.60373510272623,
       lng: -58.38157007365845,
     },
-    width: '800px',
+    width: '50%',
     height: '600px',
     zoom: 14,
     draggable: true,
   };
 
-  onMarkerClick = (event, other) => {
-    console.log(event);
-    console.log(other);
-  };
+  // TODO delete later
+  onMarkerClick = (event, other) => ({
+    event,
+    other,
+  });
 
   mapClicked = (mapProps, map, clickEvent) => {
-    console.log(mapProps, map, clickEvent);
-
     const lat = clickEvent.latLng.lat();
     const lng = clickEvent.latLng.lng();
 
@@ -48,11 +47,6 @@ export default class Map extends React.Component {
     }));
   };
 
-  getLatLng = () => ({
-    lat: this.state.lat,
-    lng: this.state.lng,
-  });
-
   render() {
     const {
       initialPosition,
@@ -64,10 +58,10 @@ export default class Map extends React.Component {
     } = this.props;
     const { markers } = this.state;
 
-    console.log('>>>', styles);
+    console.log('>>>>', styles);
 
     return (
-      <div>
+      <div className={styles.container}>
         <div className={styles.map}>
           <MapContainer
             draggable={draggable}
@@ -89,6 +83,12 @@ export default class Map extends React.Component {
               />
             ))}
           </MapContainer>
+        </div>
+        <div className={styles.markers}>
+          <h2>Markers</h2>
+          {markers.map(marker => (
+            <p>pepe {JSON.stringify(marker)}</p>
+          ))}
         </div>
       </div>
     );
