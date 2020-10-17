@@ -20,8 +20,8 @@ shell.mv(
 );
 shell.cp('app/tests/i18n.test.js', 'internals/templates/tests/i18n.test.js');
 
-// Cleanup components/
-shell.rm('-rf', 'app/components/*');
+// // Cleanup components/
+// shell.rm('-rf', 'app/components/*');
 
 // Handle containers/
 shell.rm('-rf', 'app/containers');
