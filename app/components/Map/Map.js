@@ -6,11 +6,11 @@ import styles from './Map.css';
 export default class Map extends React.Component {
   static propTypes = {
     initialPosition: PropTypes.object,
-    google: PropTypes.number,
+    google: PropTypes.object.isRequired,
     draggable: PropTypes.bool,
     width: PropTypes.string,
-    zoom: PropTypes.number,
     height: PropTypes.string,
+    zoom: PropTypes.number,
   };
 
   state = {
@@ -22,16 +22,16 @@ export default class Map extends React.Component {
       lat: -34.60373510272623,
       lng: -58.38157007365845,
     },
-    width: '850px',
-    height: '90%',
+    width: '800px',
+    height: '600px',
     zoom: 14,
-    draggable: false,
+    draggable: true,
   };
 
-  onMarkerClick(event, other) {
+  onMarkerClick = (event, other) => {
     console.log(event);
     console.log(other);
-  }
+  };
 
   mapClicked = (mapProps, map, clickEvent) => {
     console.log(mapProps, map, clickEvent);
@@ -56,13 +56,15 @@ export default class Map extends React.Component {
   render() {
     const {
       initialPosition,
-      width,
-      height,
       draggable,
       google,
       zoom,
+      width,
+      height,
     } = this.props;
     const { markers } = this.state;
+
+    console.log('>>>', styles);
 
     return (
       <div>
