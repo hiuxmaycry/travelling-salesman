@@ -4,7 +4,7 @@
   "description": "Travelling salesman simulator",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git@github.com:hiuxmaycry/travelling-salesman.git"
   },
   "engines": {
     "npm": ">=5",
