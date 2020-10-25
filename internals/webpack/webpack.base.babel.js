@@ -45,6 +45,7 @@ module.exports = options => ({
               camelCase: true,
             },
           },
+          'postcss-loader',
         ],
       },
       {
@@ -63,6 +64,7 @@ module.exports = options => ({
               camelCase: true,
             },
           },
+          'postcss-loader',
         ],
       },
       {

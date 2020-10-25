@@ -1,7 +1,8 @@
-import { Map as MapContainer, Marker } from 'google-maps-react';
+import { Map as MapContainer, Marker as MapMarker } from 'google-maps-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './Map.css';
+import Marker from './Marker';
 
 export default class Map extends React.Component {
   static propTypes = {
@@ -43,8 +44,27 @@ export default class Map extends React.Component {
 
   addMarker = (lat, lng) => {
     this.setState(prevState => ({
-      markers: prevState.markers.concat({ position: { lat, lng } }),
+      markers: prevState.markers.concat({
+        position: { lat, lng },
+        id: `${lat}/${lng}`,
+      }),
     }));
+  };
+
+  deleteMarker = markerId => {
+    const { markers } = this.state;
+    const index = markers.findIndex(({ id }) => id === markerId);
+
+    console.log('>>>>', index);
+
+    if (index >= 0) {
+      this.setState({
+        markers: [
+          ...markers.slice(0, index),
+          ...markers.slice(index + 1, markers.length),
+        ],
+      });
+    }
   };
 
   render() {
@@ -58,14 +78,12 @@ export default class Map extends React.Component {
     } = this.props;
     const { markers } = this.state;
 
-    console.log('>>>>', styles);
-
     return (
       <div className={styles.container}>
         <div className={styles.map}>
           <MapContainer
             draggable={draggable}
-            style={{ width, height }}
+            containerStyle={{ width, height }}
             google={google}
             zoom={zoom}
             initialCenter={initialPosition}
@@ -74,11 +92,12 @@ export default class Map extends React.Component {
             onClick={this.mapClicked}
           >
             {markers.map(marker => (
-              <Marker
+              <MapMarker
                 onClick={this.onMarkerClick}
                 position={marker.position}
                 disableDefaultUI
-                id="CurrentLocation"
+                key={marker.id}
+                id={marker.id}
                 name="CurrentLocation"
               />
             ))}
@@ -86,9 +105,15 @@ export default class Map extends React.Component {
         </div>
         <div className={styles.markers}>
           <h2>Markers</h2>
-          {markers.map(marker => (
-            <p>pepe {JSON.stringify(marker)}</p>
-          ))}
+          <div className={styles.markersList}>
+            {markers.map((marker, index) => (
+              <Marker
+                {...marker}
+                index={index}
+                onDelete={() => this.deleteMarker(marker.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );
