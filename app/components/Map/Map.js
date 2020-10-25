@@ -1,7 +1,8 @@
-import { Map as MapContainer, Marker } from 'google-maps-react';
+import { Map as MapContainer, Marker as MapMarker } from 'google-maps-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './Map.css';
+import Marker from './Marker';
 
 export default class Map extends React.Component {
   static propTypes = {
@@ -22,20 +23,19 @@ export default class Map extends React.Component {
       lat: -34.60373510272623,
       lng: -58.38157007365845,
     },
-    width: '800px',
+    width: '50%',
     height: '600px',
     zoom: 14,
     draggable: true,
   };
 
-  onMarkerClick = (event, other) => {
-    console.log(event);
-    console.log(other);
-  };
+  // TODO delete later
+  onMarkerClick = (event, other) => ({
+    event,
+    other,
+  });
 
   mapClicked = (mapProps, map, clickEvent) => {
-    console.log(mapProps, map, clickEvent);
-
     const lat = clickEvent.latLng.lat();
     const lng = clickEvent.latLng.lng();
 
@@ -44,14 +44,28 @@ export default class Map extends React.Component {
 
   addMarker = (lat, lng) => {
     this.setState(prevState => ({
-      markers: prevState.markers.concat({ position: { lat, lng } }),
+      markers: prevState.markers.concat({
+        position: { lat, lng },
+        id: `${lat}/${lng}`,
+      }),
     }));
   };
 
-  getLatLng = () => ({
-    lat: this.state.lat,
-    lng: this.state.lng,
-  });
+  deleteMarker = markerId => {
+    const { markers } = this.state;
+    const index = markers.findIndex(({ id }) => id === markerId);
+
+    console.log('>>>>', index);
+
+    if (index >= 0) {
+      this.setState({
+        markers: [
+          ...markers.slice(0, index),
+          ...markers.slice(index + 1, markers.length),
+        ],
+      });
+    }
+  };
 
   render() {
     const {
@@ -64,14 +78,12 @@ export default class Map extends React.Component {
     } = this.props;
     const { markers } = this.state;
 
-    console.log('>>>', styles);
-
     return (
-      <div>
+      <div className={styles.container}>
         <div className={styles.map}>
           <MapContainer
             draggable={draggable}
-            style={{ width, height }}
+            containerStyle={{ width, height }}
             google={google}
             zoom={zoom}
             initialCenter={initialPosition}
@@ -80,15 +92,28 @@ export default class Map extends React.Component {
             onClick={this.mapClicked}
           >
             {markers.map(marker => (
-              <Marker
+              <MapMarker
                 onClick={this.onMarkerClick}
                 position={marker.position}
                 disableDefaultUI
-                id="CurrentLocation"
+                key={marker.id}
+                id={marker.id}
                 name="CurrentLocation"
               />
             ))}
           </MapContainer>
+        </div>
+        <div className={styles.markers}>
+          <h2>Markers</h2>
+          <div className={styles.markersList}>
+            {markers.map((marker, index) => (
+              <Marker
+                {...marker}
+                index={index}
+                onDelete={() => this.deleteMarker(marker.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );

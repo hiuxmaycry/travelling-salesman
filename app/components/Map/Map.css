@@ -1,6 +1,26 @@
 :local {
-  .map {
-    width: 800px;
+  .container {
+    width: 100%;
     height: 600px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .map {
+    width: 50%;
+    height: 600px;
+  }
+
+  .markers {
+    width: 50%;
+    margin-right: 10px;
+    margin-left: 20px;
+    height: 600px;
+  }
+
+  .markers-list {
+    width: 100%;
+    height: 530px;
+    overflow: auto;
   }
 }

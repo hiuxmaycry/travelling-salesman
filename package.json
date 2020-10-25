@@ -4,7 +4,7 @@
   "description": "Travelling salesman simulator",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git@github.com:hiuxmaycry/travelling-salesman.git"
   },
   "engines": {
     "npm": ">=5",
@@ -112,12 +112,14 @@
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-react-intl": "3.0.1",
     "babel-plugin-styled-components": "1.10.0",
+    "babel-plugin-transform-postcss": "^0.3.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "circular-dependency-plugin": "5.0.2",
     "compare-versions": "3.4.0",
     "compression-webpack-plugin": "2.0.0",
     "coveralls": "3.0.3",
     "css-loader": "2.1.1",
+    "cssnano": "^4.1.10",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-airbnb-base": "13.1.0",
@@ -143,6 +145,14 @@
     "null-loader": "0.1.1",
     "offline-plugin": "5.0.6",
     "plop": "2.3.0",
+    "postcss": "^8.1.1",
+    "postcss-import": "^12.0.1",
+    "postcss-initial": "^4.0.0",
+    "postcss-loader": "^4.0.4",
+    "postcss-mixins": "^7.0.1",
+    "postcss-modules": "^3.2.2",
+    "postcss-nested": "^5.0.1",
+    "postcss-preset-env": "^6.7.0",
     "pre-commit": "1.2.2",
     "prettier": "1.17.0",
     "react-app-polyfill": "0.2.2",
