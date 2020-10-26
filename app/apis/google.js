@@ -1,12 +1,19 @@
-export const googleURI =
-  'https://maps.google.com/maps/api/geocode/json?address=';
+export const googleURI = 'https://maps.google.com/maps/api/';
 
-const apiKey = 'AIzaSyCxw77azFkwYOs_QYt-1HqKSwZcbrvEyrE';
+export const geocodePath = 'geocode';
 
-export const getAddressPositionConfig = address => ({
+export const directionsPath = 'directions';
+
+export const apiKey = 'AIzaSyCxw77azFkwYOs_QYt-1HqKSwZcbrvEyrE';
+
+export const googleConfig = {
+  mode: 'no-cors',
   headers: {
+    Referrer: 'http://localhost:3000/',
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Methods': 'DELETE, POST, GET, OPTIONS',
+    'Access-Control-Allow-Origin': 'http://localhost:3000/',
+    'Access-Control-Allow-Headers':
+      'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
   },
-  method: 'get',
-  url: `https://maps.google.com/maps/api/geocode/json?address=${address}&key=${apiKey}`,
-});
+};

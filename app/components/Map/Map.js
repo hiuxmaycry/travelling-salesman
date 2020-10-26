@@ -10,6 +10,7 @@ export default class Map extends React.Component {
     google: PropTypes.object.isRequired,
     draggable: PropTypes.bool,
     width: PropTypes.string,
+    onRenderMarker: PropTypes.func,
     height: PropTypes.string,
     zoom: PropTypes.number,
   };
@@ -55,8 +56,6 @@ export default class Map extends React.Component {
     const { markers } = this.state;
     const index = markers.findIndex(({ id }) => id === markerId);
 
-    console.log('>>>>', index);
-
     if (index >= 0) {
       this.setState({
         markers: [
@@ -75,6 +74,7 @@ export default class Map extends React.Component {
       zoom,
       width,
       height,
+      onRenderMarker,
     } = this.props;
     const { markers } = this.state;
 
@@ -111,6 +111,7 @@ export default class Map extends React.Component {
                 {...marker}
                 index={index}
                 onDelete={() => this.deleteMarker(marker.id)}
+                onRender={() => onRenderMarker(marker.position)}
               />
             ))}
           </div>
